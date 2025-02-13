@@ -69,45 +69,63 @@
         </a>
     </div>
 
+    <!-- Resize Section -->
+    <div id="resizeSection" class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg max-w-xl hidden">
+        <h1 class="text-3xl font-bold text-center text-blue-600">Resize Image</h1>
+        <p class="text-gray-600 text-center mt-2">Reduce your image size to your desired KB!</p>
+
+        <!-- Image Input -->
+        <div class="mt-6">
+            <input type="file" id="resizeFileInput" class="hidden" accept="image/*">
+            <label for="resizeFileInput" class="flex items-center justify-center w-full py-3 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M3.172 9a4.001 4.001 0 010-2h13.656a4.001 4.001 0 010 2H3.172zM4 11a2 2 0 100 4h12a2 2 0 100-4H4z" />
+                </svg>
+                <span>Choose Image</span>
+            </label>
+        </div>
+
+        <!-- Max Size Input -->
+        <div class="mt-6">
+            <label for="resizeMaxSize" class="block text-sm font-medium text-gray-700">Set Max Size (KB)</label>
+            <input type="number" id="resizeMaxSize" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter max size in KB">
+        </div>
+
+        <!-- Action Button -->
+        <button id="resizeBtn" class="mt-8 w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6.293 9.707a1 1 0 010-1.414L10 4.586V3a1 1 0 112 0v1.586l3.707 3.707a1 1 0 01-1.414 1.414L12 6.414V17a1 1 0 11-2 0V6.414L7.707 9.707a1 1 0 01-1.414 0z" />
+            </svg>
+            <span>Resize</span>
+        </button>
+
+        <!-- Download Link -->
+        <a id="resizeDownloadLink" class="hidden mt-6 block w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-center hover:bg-gray-200 transition-all">
+            Download Resized Image
+        </a>
+    </div>
+
     <script>
-        const convertFileInput = document.getElementById('convertFileInput');
-        const convertFormat = document.getElementById('convertFormat');
-        const convertBtn = document.getElementById('convertBtn');
-        const convertDownloadLink = document.getElementById('convertDownloadLink');
+        const convertTab = document.getElementById('convertTab');
+        const resizeTab = document.getElementById('resizeTab');
+        const convertSection = document.getElementById('convertSection');
+        const resizeSection = document.getElementById('resizeSection');
 
-        convertBtn.addEventListener('click', function () {
-            if (!convertFileInput.files.length) {
-                alert('Please select an image to convert.');
-                return;
-            }
+        // Toggle between Convert and Resize sections
+        convertTab.addEventListener('click', () => {
+            convertSection.classList.remove('hidden');
+            resizeSection.classList.add('hidden');
+            convertTab.classList.add('bg-blue-700', 'text-white');
+            resizeTab.classList.remove('bg-blue-700', 'text-white');
+            resizeTab.classList.add('bg-gray-200', 'text-blue-800');
+        });
 
-            const file = convertFileInput.files[0];
-            const selectedFormat = convertFormat.value;
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const img = new Image();
-                img.src = e.target.result;
-
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-
-                    const mimeType = `image/${selectedFormat}`;
-                    canvas.toBlob(function (blob) {
-                        const url = URL.createObjectURL(blob);
-                        convertDownloadLink.href = url;
-                        convertDownloadLink.download = `converted_image.${selectedFormat}`;
-                        convertDownloadLink.classList.remove('hidden');
-                    }, mimeType, 1);
-                };
-            };
-
-            reader.readAsDataURL(file);
+        resizeTab.addEventListener('click', () => {
+            resizeSection.classList.remove('hidden');
+            convertSection.classList.add('hidden');
+            resizeTab.classList.add('bg-blue-700', 'text-white');
+            convertTab.classList.remove('bg-blue-700', 'text-white');
+            convertTab.classList.add('bg-gray-200', 'text-blue-800');
         });
     </script>
 </body>
