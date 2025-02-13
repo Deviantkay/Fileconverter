@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Image Converter & Resizer</title>
+    <title>Image Tools: Convert & Resize</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gradient-to-br from-blue-100 via-white to-blue-50 min-h-screen">
@@ -32,7 +32,6 @@
         <h1 class="text-3xl font-bold text-center text-blue-600">Convert Image</h1>
         <p class="text-gray-600 text-center mt-2">Easily convert your image to various formats!</p>
 
-        <!-- Image Input -->
         <div class="mt-6">
             <input type="file" id="convertFileInput" class="hidden" accept="image/*">
             <label for="convertFileInput" class="flex items-center justify-center w-full py-3 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
@@ -43,7 +42,6 @@
             </label>
         </div>
 
-        <!-- Format Selector -->
         <div class="mt-6">
             <label for="convertFormat" class="block text-sm font-medium text-gray-700">Convert To</label>
             <select id="convertFormat" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
@@ -55,15 +53,10 @@
             </select>
         </div>
 
-        <!-- Action Button -->
         <button id="convertBtn" class="mt-8 w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6.293 9.707a1 1 0 010-1.414L10 4.586V3a1 1 0 112 0v1.586l3.707 3.707a1 1 0 01-1.414 1.414L12 6.414V17a1 1 0 11-2 0V6.414L7.707 9.707a1 1 0 01-1.414 0z" />
-            </svg>
-            <span>Convert</span>
+            Convert
         </button>
 
-        <!-- Download Link -->
         <a id="convertDownloadLink" class="hidden mt-6 block w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-center hover:bg-gray-200 transition-all">
             Download Converted Image
         </a>
@@ -74,32 +67,22 @@
         <h1 class="text-3xl font-bold text-center text-blue-600">Resize Image</h1>
         <p class="text-gray-600 text-center mt-2">Reduce your image size to your desired KB!</p>
 
-        <!-- Image Input -->
         <div class="mt-6">
             <input type="file" id="resizeFileInput" class="hidden" accept="image/*">
             <label for="resizeFileInput" class="flex items-center justify-center w-full py-3 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M3.172 9a4.001 4.001 0 010-2h13.656a4.001 4.001 0 010 2H3.172zM4 11a2 2 0 100 4h12a2 2 0 100-4H4z" />
-                </svg>
-                <span>Choose Image</span>
+                Choose Image
             </label>
         </div>
 
-        <!-- Max Size Input -->
         <div class="mt-6">
             <label for="resizeMaxSize" class="block text-sm font-medium text-gray-700">Set Max Size (KB)</label>
             <input type="number" id="resizeMaxSize" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter max size in KB">
         </div>
 
-        <!-- Action Button -->
         <button id="resizeBtn" class="mt-8 w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M6.293 9.707a1 1 0 010-1.414L10 4.586V3a1 1 0 112 0v1.586l3.707 3.707a1 1 0 01-1.414 1.414L12 6.414V17a1 1 0 11-2 0V6.414L7.707 9.707a1 1 0 01-1.414 0z" />
-            </svg>
-            <span>Resize</span>
+            Resize
         </button>
 
-        <!-- Download Link -->
         <a id="resizeDownloadLink" class="hidden mt-6 block w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-center hover:bg-gray-200 transition-all">
             Download Resized Image
         </a>
@@ -111,7 +94,7 @@
         const convertSection = document.getElementById('convertSection');
         const resizeSection = document.getElementById('resizeSection');
 
-        // Toggle between Convert and Resize sections
+        // Navbar tab toggle functionality
         convertTab.addEventListener('click', () => {
             convertSection.classList.remove('hidden');
             resizeSection.classList.add('hidden');
@@ -126,6 +109,51 @@
             resizeTab.classList.add('bg-blue-700', 'text-white');
             convertTab.classList.remove('bg-blue-700', 'text-white');
             convertTab.classList.add('bg-gray-200', 'text-blue-800');
+        });
+
+        // Convert functionality
+        document.getElementById('convertBtn').addEventListener('click', () => {
+            const fileInput = document.getElementById('convertFileInput');
+            const format = document.getElementById('convertFormat').value;
+            const downloadLink = document.getElementById('convertDownloadLink');
+
+            if (fileInput.files.length === 0) {
+                alert('Please select an image file first.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const img = new Image();
+                img.src = e.target.result;
+
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    const mimeType = `image/${format}`;
+
+                    canvas.toBlob(function (blob) {
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        downloadLink.download = `converted_image.${format}`;
+                        downloadLink.classList.remove('hidden');
+                    }, mimeType);
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Resize functionality (example only)
+        document.getElementById('resizeBtn').addEventListener('click', () => {
+            alert("Resize functionality is under construction.");
         });
     </script>
 </body>
