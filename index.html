@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Image Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@1.5.7/dist/lottie-player.js"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Enhanced Image Converter</h1>
+
+        <!-- Image Preview -->
+        <div id="previewContainer" class="hidden mb-4">
+            <img id="imagePreview" class="w-full h-auto rounded-lg" alt="Preview">
+        </div>
+
+        <!-- File Input -->
+        <input type="file" id="fileInput" class="hidden" accept="image/*">
+        <label for="fileInput" class="block w-full bg-blue-500 text-white py-2 px-4 rounded cursor-pointer text-center hover:bg-blue-600">
+            <span>Select Image</span>
+        </label>
+
+        <!-- Format Selection -->
+        <div class="mt-4">
+            <label for="format" class="block text-sm font-medium text-gray-700">Convert to:</label>
+            <select id="format" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="webp">WebP</option>
+                <option value="bmp">BMP</option>
+                <option value="gif">GIF</option>
+                <option value="ico">ICO</option>
+            </select>
+        </div>
+
+        <!-- Convert Button -->
+        <button id="convertBtn" class="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 flex items-center justify-center">
+            <span>Convert</span>
+        </button>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden mt-4 flex justify-center">
+            <lottie-player src="https://assets10.lottiefiles.com/packages/lf20_8xu8ktt8.json" background="transparent" speed="1" style="width: 50px; height: 50px;" loop autoplay></lottie-player>
+        </div>
+
+        <!-- Download Link -->
+        <a id="downloadLink" class="hidden mt-4 block w-full bg-gray-200 text-gray-700 py-2 px-4 rounded text-center hover:bg-gray-300">
+            Download Converted Image
+        </a>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const format = document.getElementById('format');
+        const convertBtn = document.getElementById('convertBtn');
+        const downloadLink = document.getElementById('downloadLink');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('previewContainer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Show image preview when file is selected
+        fileInput.addEventListener('change', function() {
+            if (fileInput.files.length === 0) {
+                previewContainer.classList.add('hidden');
+                return;
+            }
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+            };
+
+            reader.readAsDataURL(file);
+        });
+
+        // Convert button click handler
+        convertBtn.addEventListener('click', function() {
+            if (fileInput.files.length === 0) {
+                alert('Please select an image file first.');
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            loadingIndicator.classList.remove('hidden');
+            downloadLink.classList.add('hidden');
+
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    // Determine MIME type
+                    let mimeType;
+                    switch (format.value) {
+                        case 'png': mimeType = 'image/png'; break;
+                        case 'jpeg': mimeType = 'image/jpeg'; break;
+                        case 'webp': mimeType = 'image/webp'; break;
+                        case 'bmp': mimeType = 'image/bmp'; break;
+                        case 'gif': mimeType = 'image/gif'; break;
+                        case 'ico': mimeType = 'image/x-icon'; break;
+                        default: mimeType = 'image/png';
+                    }
+
+                    // Convert canvas to Blob and create download link
+                    canvas.toBlob(function(blob) {
+                        const url = URL.createObjectURL(blob);
+                        downloadLink.href = url;
+                        downloadLink.download = `converted_image.${format.value}`;
+                        downloadLink.classList.remove('hidden');
+                        loadingIndicator.classList.add('hidden');
+                    }, mimeType, 1);
+                };
+            };
+
+            reader.readAsDataURL(file);
+        });
+    </script>
+</body>
+</html>
