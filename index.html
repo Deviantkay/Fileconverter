@@ -27,83 +27,62 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="container mx-auto mt-10">
-        <div id="resizeSection" class="p-8 bg-white rounded-lg shadow-lg max-w-xl mx-auto">
-            <h1 class="text-3xl font-bold text-center text-blue-600">Resize Image</h1>
-            <p class="text-gray-600 text-center mt-2">Easily resize your image and adjust file size to meet your needs!</p>
+    <!-- Convert Section -->
+    <div id="convertSection" class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg max-w-xl">
+        <h1 class="text-3xl font-bold text-center text-blue-600">Convert Image</h1>
+        <p class="text-gray-600 text-center mt-2">Easily convert your image to various formats!</p>
 
-            <!-- Image Input -->
-            <div class="mt-6">
-                <input type="file" id="resizeFileInput" class="hidden" accept="image/*">
-                <label for="resizeFileInput" class="flex items-center justify-center w-full py-3 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M3.172 9a4.001 4.001 0 010-2h13.656a4.001 4.001 0 010 2H3.172zM4 11a2 2 0 100 4h12a2 2 0 100-4H4z" />
-                    </svg>
-                    <span>Choose Image</span>
-                </label>
-            </div>
-
-            <!-- Max Size Input -->
-            <div class="mt-6">
-                <label for="resizeMaxSize" class="block text-sm font-medium text-gray-700">Set Max Size (KB)</label>
-                <input type="number" id="resizeMaxSize" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" placeholder="Enter max size (e.g., 300)">
-            </div>
-
-            <!-- Options -->
-            <div class="mt-6">
-                <label class="flex items-center">
-                    <input type="checkbox" id="keepExtension" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
-                    <span class="ml-2 text-sm text-gray-700">Keep Original Extension</span>
-                </label>
-
-                <!-- Format Selector -->
-                <div id="formatSelector" class="hidden mt-4">
-                    <label for="resizeFormat" class="block text-sm font-medium text-gray-700">Select Format</label>
-                    <select id="resizeFormat" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                        <option value="png">PNG</option>
-                        <option value="jpeg">JPEG</option>
-                        <option value="webp">WebP</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Action Button -->
-            <button id="resizeBtn" class="mt-8 w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center">
+        <!-- Image Input -->
+        <div class="mt-6">
+            <input type="file" id="convertFileInput" class="hidden" accept="image/*">
+            <label for="convertFileInput" class="flex items-center justify-center w-full py-3 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600 transition-all">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M6.293 9.707a1 1 0 010-1.414L10 4.586V3a1 1 0 112 0v1.586l3.707 3.707a1 1 0 01-1.414 1.414L12 6.414V17a1 1 0 11-2 0V6.414L7.707 9.707a1 1 0 01-1.414 0z" />
+                    <path d="M3.172 9a4.001 4.001 0 010-2h13.656a4.001 4.001 0 010 2H3.172zM4 11a2 2 0 100 4h12a2 2 0 100-4H4z" />
                 </svg>
-                <span>Resize</span>
-            </button>
-
-            <!-- Download Link -->
-            <a id="resizeDownloadLink" class="hidden mt-6 block w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-center hover:bg-gray-200 transition-all">
-                Download Resized Image
-            </a>
+                <span>Choose Image</span>
+            </label>
         </div>
+
+        <!-- Format Selector -->
+        <div class="mt-6">
+            <label for="convertFormat" class="block text-sm font-medium text-gray-700">Convert To</label>
+            <select id="convertFormat" class="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                <option value="png">PNG</option>
+                <option value="jpeg">JPEG</option>
+                <option value="webp">WebP</option>
+                <option value="bmp">BMP</option>
+                <option value="gif">GIF</option>
+            </select>
+        </div>
+
+        <!-- Action Button -->
+        <button id="convertBtn" class="mt-8 w-full py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M6.293 9.707a1 1 0 010-1.414L10 4.586V3a1 1 0 112 0v1.586l3.707 3.707a1 1 0 01-1.414 1.414L12 6.414V17a1 1 0 11-2 0V6.414L7.707 9.707a1 1 0 01-1.414 0z" />
+            </svg>
+            <span>Convert</span>
+        </button>
+
+        <!-- Download Link -->
+        <a id="convertDownloadLink" class="hidden mt-6 block w-full py-3 bg-gray-100 text-gray-700 rounded-lg text-center hover:bg-gray-200 transition-all">
+            Download Converted Image
+        </a>
     </div>
 
     <script>
-        const resizeFileInput = document.getElementById('resizeFileInput');
-        const resizeMaxSize = document.getElementById('resizeMaxSize');
-        const resizeBtn = document.getElementById('resizeBtn');
-        const resizeDownloadLink = document.getElementById('resizeDownloadLink');
-        const keepExtension = document.getElementById('keepExtension');
-        const formatSelector = document.getElementById('formatSelector');
-        const resizeFormat = document.getElementById('resizeFormat');
+        const convertFileInput = document.getElementById('convertFileInput');
+        const convertFormat = document.getElementById('convertFormat');
+        const convertBtn = document.getElementById('convertBtn');
+        const convertDownloadLink = document.getElementById('convertDownloadLink');
 
-        keepExtension.addEventListener('change', () => {
-            formatSelector.classList.toggle('hidden', keepExtension.checked);
-        });
-
-        resizeBtn.addEventListener('click', function () {
-            if (!resizeFileInput.files.length || !resizeMaxSize.value) {
-                alert('Please select an image and set max size.');
+        convertBtn.addEventListener('click', function () {
+            if (!convertFileInput.files.length) {
+                alert('Please select an image to convert.');
                 return;
             }
 
-            const file = resizeFileInput.files[0];
-            const maxSize = parseInt(resizeMaxSize.value) * 1024;
+            const file = convertFileInput.files[0];
+            const selectedFormat = convertFormat.value;
             const reader = new FileReader();
 
             reader.onload = function (e) {
@@ -118,23 +97,13 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
 
-                    let quality = 1.0;
-                    const originalExtension = file.type.split('/')[1];
-                    const selectedFormat = keepExtension.checked ? originalExtension : resizeFormat.value;
-
                     const mimeType = `image/${selectedFormat}`;
-
-                    canvas.toBlob(function compress(blob) {
-                        if (blob.size > maxSize && quality > 0.1) {
-                            quality -= 0.1;
-                            canvas.toBlob(compress, mimeType, quality);
-                        } else {
-                            const url = URL.createObjectURL(blob);
-                            resizeDownloadLink.href = url;
-                            resizeDownloadLink.download = `resized_image.${selectedFormat}`;
-                            resizeDownloadLink.classList.remove('hidden');
-                        }
-                    }, mimeType, quality);
+                    canvas.toBlob(function (blob) {
+                        const url = URL.createObjectURL(blob);
+                        convertDownloadLink.href = url;
+                        convertDownloadLink.download = `converted_image.${selectedFormat}`;
+                        convertDownloadLink.classList.remove('hidden');
+                    }, mimeType, 1);
                 };
             };
 
