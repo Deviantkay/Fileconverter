@@ -19,36 +19,8 @@
     </nav>
 
     <div class="container mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg w-full max-w-md">
-        <!-- Convert Section -->
-        <div id="convertSection">
-            <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Image Converter</h1>
-            <input type="file" id="fileInput" class="hidden" accept="image/*">
-            <label for="fileInput" class="block w-full bg-blue-500 text-white py-2 px-4 rounded cursor-pointer text-center hover:bg-blue-600">
-                <span>Select Image</span>
-            </label>
-
-            <div class="mt-4">
-                <label for="format" class="block text-sm font-medium text-gray-700">Convert to:</label>
-                <select id="format" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                    <option value="png">PNG</option>
-                    <option value="jpeg">JPEG</option>
-                    <option value="webp">WebP</option>
-                    <option value="bmp">BMP</option>
-                    <option value="gif">GIF</option>
-                    <option value="ico">ICO</option>
-                </select>
-            </div>
-
-            <button id="convertBtn" class="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 flex items-center justify-center">
-                <span>Convert</span>
-            </button>
-            <a id="downloadLink" class="hidden mt-4 block w-full bg-gray-200 text-gray-700 py-2 px-4 rounded text-center hover:bg-gray-300">
-                Download Converted Image
-            </a>
-        </div>
-
         <!-- Resize Section -->
-        <div id="resizeSection" class="hidden">
+        <div id="resizeSection">
             <h1 class="text-2xl font-bold mb-6 text-center text-gray-800">Resize Image</h1>
             <input type="file" id="resizeFileInput" class="hidden" accept="image/*">
             <label for="resizeFileInput" class="block w-full bg-blue-500 text-white py-2 px-4 rounded cursor-pointer text-center hover:bg-blue-600">
@@ -58,6 +30,22 @@
             <div class="mt-4">
                 <label for="resizeMaxSize" class="block text-sm font-medium text-gray-700">Set Max Size (KB):</label>
                 <input type="number" id="resizeMaxSize" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" placeholder="Enter max size in KB (e.g., 300)">
+            </div>
+
+            <!-- Option: Keep Original Extension -->
+            <div class="mt-4 flex items-center">
+                <input type="checkbox" id="keepExtension" class="h-4 w-4 text-blue-600 border-gray-300 rounded" checked>
+                <label for="keepExtension" class="ml-2 text-sm text-gray-700">Keep Original Extension</label>
+            </div>
+
+            <!-- Format Selector (Disabled by Default) -->
+            <div id="formatSelector" class="mt-4 hidden">
+                <label for="resizeFormat" class="block text-sm font-medium text-gray-700">Select Format:</label>
+                <select id="resizeFormat" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPEG</option>
+                    <option value="webp">WebP</option>
+                </select>
             </div>
 
             <button id="resizeBtn" class="mt-6 w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 flex items-center justify-center">
@@ -70,81 +58,21 @@
     </div>
 
     <script>
-        const convertTab = document.getElementById('convertTab');
-        const resizeTab = document.getElementById('resizeTab');
-        const convertSection = document.getElementById('convertSection');
-        const resizeSection = document.getElementById('resizeSection');
-
-        const fileInput = document.getElementById('fileInput');
-        const format = document.getElementById('format');
-        const convertBtn = document.getElementById('convertBtn');
-        const downloadLink = document.getElementById('downloadLink');
-
         const resizeFileInput = document.getElementById('resizeFileInput');
         const resizeMaxSize = document.getElementById('resizeMaxSize');
         const resizeBtn = document.getElementById('resizeBtn');
         const resizeDownloadLink = document.getElementById('resizeDownloadLink');
+        const keepExtension = document.getElementById('keepExtension');
+        const formatSelector = document.getElementById('formatSelector');
+        const resizeFormat = document.getElementById('resizeFormat');
 
-        // Switch Tabs
-        convertTab.addEventListener('click', () => {
-            convertSection.classList.remove('hidden');
-            resizeSection.classList.add('hidden');
-            convertTab.classList.add('bg-blue-600', 'text-white');
-            resizeTab.classList.remove('bg-blue-600', 'text-white');
-            resizeTab.classList.add('bg-gray-200', 'text-blue-700');
-        });
-
-        resizeTab.addEventListener('click', () => {
-            resizeSection.classList.remove('hidden');
-            convertSection.classList.add('hidden');
-            resizeTab.classList.add('bg-blue-600', 'text-white');
-            convertTab.classList.remove('bg-blue-600', 'text-white');
-            convertTab.classList.add('bg-gray-200', 'text-blue-700');
-        });
-
-        // Convert Image
-        convertBtn.addEventListener('click', function () {
-            if (fileInput.files.length === 0) {
-                alert('Please select an image file first.');
-                return;
+        // Toggle format selector based on "Keep Original Extension" checkbox
+        keepExtension.addEventListener('change', () => {
+            if (keepExtension.checked) {
+                formatSelector.classList.add('hidden');
+            } else {
+                formatSelector.classList.remove('hidden');
             }
-
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function (e) {
-                const img = new Image();
-                img.src = e.target.result;
-
-                img.onload = function () {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-
-                    let mimeType;
-                    switch (format.value) {
-                        case 'png': mimeType = 'image/png'; break;
-                        case 'jpeg': mimeType = 'image/jpeg'; break;
-                        case 'webp': mimeType = 'image/webp'; break;
-                        case 'bmp': mimeType = 'image/bmp'; break;
-                        case 'gif': mimeType = 'image/gif'; break;
-                        case 'ico': mimeType = 'image/x-icon'; break;
-                        default: mimeType = 'image/png';
-                    }
-
-                    canvas.toBlob(function (blob) {
-                        const url = URL.createObjectURL(blob);
-                        downloadLink.href = url;
-                        downloadLink.download = `converted_image.${format.value}`;
-                        downloadLink.classList.remove('hidden');
-                    }, mimeType, 1);
-                };
-            };
-
-            reader.readAsDataURL(file);
         });
 
         // Resize Image
@@ -171,17 +99,23 @@
                     ctx.drawImage(img, 0, 0);
 
                     let quality = 1.0;
+                    const originalExtension = file.type.split('/')[1]; // Get original extension
+                    const selectedFormat = keepExtension.checked ? originalExtension : resizeFormat.value;
+
+                    const mimeType = `image/${selectedFormat}`;
+
+                    // Compress until size matches maxSize
                     canvas.toBlob(function compress(blob) {
                         if (blob.size > maxSize && quality > 0.1) {
                             quality -= 0.1;
-                            canvas.toBlob(compress, 'image/jpeg', quality);
+                            canvas.toBlob(compress, mimeType, quality);
                         } else {
                             const url = URL.createObjectURL(blob);
                             resizeDownloadLink.href = url;
-                            resizeDownloadLink.download = 'resized_image.jpeg';
+                            resizeDownloadLink.download = `resized_image.${selectedFormat}`;
                             resizeDownloadLink.classList.remove('hidden');
                         }
-                    }, 'image/jpeg', quality);
+                    }, mimeType, quality);
                 };
             };
 
